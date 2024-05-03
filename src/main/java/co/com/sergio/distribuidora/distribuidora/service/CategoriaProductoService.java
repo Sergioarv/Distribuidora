@@ -48,4 +48,12 @@ public interface CategoriaProductoService {
      * @return categoria modificada
      */
     CategoriaProductoDTO modificarCategoria(CategoriaProductoDTO categoriaProductoDTO);
+
+    /**
+     * Método encargado de eliminar una categoria
+     *
+     * @param categoriaProductoDTO, categoria a eliminar en la base de datos
+     * @return booleano si se elimina al categoria
+     */
+    Boolean eliminarCategoria(CategoriaProductoDTO categoriaProductoDTO);
 }

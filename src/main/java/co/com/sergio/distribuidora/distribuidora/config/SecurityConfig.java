@@ -28,7 +28,7 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.DELETE).hasRole("ADMIN")
 //                                .requestMatchers("/admin").hasAnyRole("ADMIN")
 //                                .requestMatchers("/producto").permitAll()
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->

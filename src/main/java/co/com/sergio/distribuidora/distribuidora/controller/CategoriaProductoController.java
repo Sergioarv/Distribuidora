@@ -208,4 +208,56 @@ public class CategoriaProductoController {
 
         return new ResponseEntity<>(response, status);
     }
+
+
+    /**
+     * Método encargado de eliminar una categoria
+     *
+     * @param categoriaProductoDTO, categoria a eliminar en la base de datos
+     * @return booleano si elimina la categoria
+     */
+    @DeleteMapping
+    public ResponseEntity<GeneralResponse<Boolean>> eliminarCategoria(
+            @RequestBody CategoriaProductoDTO categoriaProductoDTO
+    ) {
+        GeneralResponse<Boolean> response = new GeneralResponse<>();
+        Boolean data;
+        HttpStatus status = HttpStatus.OK;
+
+        try {
+            data = categoriaProductoService.eliminarCategoria(categoriaProductoDTO);
+
+            if (data) {
+                response.setData(true);
+                response.setSuccess(true);
+                response.setMessage("Se ha eliminado la categoria con exito");
+            } else {
+                response.setData(false);
+                response.setSuccess(false);
+                response.setMessage("Hubo un error al eliminar la categoria");
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setSuccess(false);
+
+            String errorMessage = e.getMessage();
+
+            // Buscar la posición de "Detail:"
+            int detailIndex = errorMessage.indexOf("Detail:");
+            if (detailIndex != -1) {
+                // Obtener el detalle de la excepción
+                String detail = errorMessage.substring(detailIndex + "Detail:".length()).trim();
+                int endDetail = detail.indexOf(".]");
+                if (endDetail != -1) {
+                    // Si se encuentra el final del detalle, extraer el detalle
+                    detail = detail.substring(0, endDetail);
+                }
+                response.setMessage("Detalle de la excepción: " + detail);
+            } else {
+                response.setMessage("No se encontró detalle de la excepción");
+            }
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
 }

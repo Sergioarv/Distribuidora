@@ -27,7 +27,9 @@ public class Convertir {
      * @return Entity convertida a DTO
      */
     public ProductoDTO ProductoAProductoDTO(Producto producto) {
-        return modelMapper.map(producto, ProductoDTO.class);
+        ProductoDTO productoDTO = modelMapper.map(producto, ProductoDTO.class);
+        productoDTO.setCategoria(CategoriaProductoACategoriaProductoDTO(producto.getCategoria()));
+        return  productoDTO;
     }
 
     /**
@@ -37,7 +39,9 @@ public class Convertir {
      * @return DTO comvertido
      */
     public Producto ProductoDTOAProducto(ProductoDTO productoDTO) {
-        return modelMapper.map(productoDTO, Producto.class);
+        Producto producto = modelMapper.map(productoDTO, Producto.class);
+        producto.setCategoria(CategoriaProductoDTOACategoriaProducto(productoDTO.getCategoria()));
+        return producto;
     }
 
     /**

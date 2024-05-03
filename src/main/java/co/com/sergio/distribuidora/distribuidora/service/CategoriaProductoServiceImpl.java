@@ -4,6 +4,7 @@ import co.com.sergio.distribuidora.distribuidora.dto.CategoriaProductoDTO;
 import co.com.sergio.distribuidora.distribuidora.entity.CategoriaProducto;
 import co.com.sergio.distribuidora.distribuidora.entity.Producto;
 import co.com.sergio.distribuidora.distribuidora.repository.CategoriaProductoRepository;
+import co.com.sergio.distribuidora.distribuidora.repository.ProductoRepository;
 import co.com.sergio.distribuidora.distribuidora.utils.Convertir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,9 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
 
     @Autowired
     CategoriaProductoRepository categoriaProductoRepository;
+
+    @Autowired
+    ProductoRepository productoRepository;
 
     @Autowired
     Convertir convertir;
@@ -108,10 +112,42 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
     @Transactional
     public CategoriaProductoDTO modificarCategoria(CategoriaProductoDTO categoriaProductoDTO) {
 
-        CategoriaProducto categoriaProducto = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
-        CategoriaProducto categoriaProductoGuardado = categoriaProductoRepository.save(categoriaProducto);
+        CategoriaProducto result = categoriaProductoRepository.findById(categoriaProductoDTO.getCategoria_id()).orElse(null);
 
-        return convertir.CategoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
+        if (result != null) {
+            CategoriaProducto categoriaProducto = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
+            CategoriaProducto categoriaProductoGuardado = categoriaProductoRepository.save(categoriaProducto);
 
+            return convertir.CategoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
+        }
+
+        return null;
+    }
+
+    /**
+     * Método encargado de eliminar una categoria
+     *
+     * @param categoriaProductoDTO, categoria a eliminar en la base de datos
+     * @return booleano si se elimina al categoria
+     */
+    @Override
+    @Transactional
+    public Boolean eliminarCategoria(CategoriaProductoDTO categoriaProductoDTO) {
+
+        CategoriaProducto categoriaEliminar = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
+
+        List<Producto> productos = productoRepository.findByCategoria(categoriaEliminar);
+
+        if (!productos.isEmpty()) {
+            throw new IllegalStateException("No se puede eliminar la categoría porque tiene productos asociados.");
+        }
+
+        CategoriaProducto result = categoriaProductoRepository.findById(categoriaEliminar.getCategoria_id()).orElse(null);
+        if (result != null){
+            categoriaProductoRepository.delete(result);
+            return true;
+        }
+
+        return false;
     }
 }

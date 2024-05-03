@@ -1,5 +1,6 @@
 package co.com.sergio.distribuidora.distribuidora.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
@@ -37,7 +38,7 @@ public class Producto {
     @Column(nullable = false)
     private int cantidadStock;
 
-    @ManyToMany(mappedBy = "productos")
+    @ManyToMany(mappedBy = "productos", cascade = CascadeType.ALL)
     private Set<Pedido> pedidos = new HashSet<>();
 
     @ManyToOne
@@ -115,5 +116,11 @@ public class Producto {
 
     public void setCategoria(CategoriaProducto categoria) {
         this.categoria = categoria;
+    }
+
+    @NonNull
+    @JsonIgnore
+    public CategoriaProducto getCategoria() {
+        return categoria;
     }
 }

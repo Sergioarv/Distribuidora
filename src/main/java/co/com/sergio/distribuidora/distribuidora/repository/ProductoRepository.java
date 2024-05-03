@@ -1,12 +1,15 @@
 package co.com.sergio.distribuidora.distribuidora.repository;
 
 import co.com.sergio.distribuidora.distribuidora.dto.ProductoDTO;
+import co.com.sergio.distribuidora.distribuidora.entity.CategoriaProducto;
 import co.com.sergio.distribuidora.distribuidora.entity.Producto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Author: Ing Sergio Abelardo Rodríguez Vásquez
@@ -53,4 +56,6 @@ public interface ProductoRepository extends JpaRepository<Producto,Integer> {
      */
     @Query(value = "select * from producto as p where lower(p.codigo) like lower(concat('%', :codigo, '%'))", nativeQuery = true)
     Page<ProductoDTO> productoPorCodigo(String codigo, Pageable pageable);
+
+    List<Producto> findByCategoria(CategoriaProducto result);
 }
