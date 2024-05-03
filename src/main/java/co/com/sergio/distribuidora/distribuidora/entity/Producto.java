@@ -18,16 +18,16 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int producto_id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nombre;
 
     @Column(nullable = false)
     private String descripcion;
 
     @Column(nullable = false)
-    private String clasificación;
+    private String clasificacion;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String codigo;
 
     @Column(nullable = false)
@@ -71,12 +71,12 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public String getClasificación() {
-        return clasificación;
+    public String getClasificacion() {
+        return clasificacion;
     }
 
-    public void setClasificación(String clasificación) {
-        this.clasificación = clasificación;
+    public void setClasificacion(String clasificacion) {
+        this.clasificacion = clasificacion;
     }
 
     public String getCodigo() {
