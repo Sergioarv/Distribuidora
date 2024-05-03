@@ -3,7 +3,6 @@ package co.com.sergio.distribuidora.distribuidora.controller;
 import co.com.sergio.distribuidora.distribuidora.dto.ProductoDTO;
 import co.com.sergio.distribuidora.distribuidora.service.ProductoService;
 import co.com.sergio.distribuidora.distribuidora.utils.GeneralResponse;
-import jakarta.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -161,4 +160,108 @@ public class ProductoController {
 
         return new ResponseEntity<>(response, status);
     }
+
+    /**
+     * Método encargado de modificar un producto
+     *
+     * @param productoDTO, producto a modificar en la base de datos
+     * @return producto modificado
+     */
+    @PutMapping
+    public ResponseEntity<GeneralResponse<ProductoDTO>> modificarProducto(
+            @RequestBody ProductoDTO productoDTO
+    ) {
+
+        GeneralResponse<ProductoDTO> response = new GeneralResponse<>();
+        ProductoDTO data;
+        HttpStatus status = HttpStatus.OK;
+
+        try {
+            data = productoService.modificarProducto(productoDTO);
+
+            if (data != null) {
+                response.setData(data);
+                response.setSuccess(true);
+                response.setMessage("Se ha modificado el producto con exito");
+            } else {
+                response.setData(null);
+                response.setSuccess(false);
+                response.setMessage("Hubo un error al modificar el producto");
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setSuccess(false);
+
+            String errorMessage = e.getMessage();
+
+            // Buscar la posición de "Detail:"
+            int detailIndex = errorMessage.indexOf("Detail:");
+            if (detailIndex != -1) {
+                // Obtener el detalle de la excepción
+                String detail = errorMessage.substring(detailIndex + "Detail:".length()).trim();
+                int endDetail = detail.indexOf(".]");
+                if (endDetail != -1) {
+                    // Si se encuentra el final del detalle, extraer el detalle
+                    detail = detail.substring(0, endDetail);
+                }
+                response.setMessage("Detalle de la excepción: " + detail);
+            } else {
+                response.setMessage("No se encontró detalle de la excepción");
+            }
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    /**
+     * Método encargado de eliminar un producto
+     *
+     * @param productoDTO, producto a eliminar en la base de datos
+     * @return booleano si elimina el producto
+     */
+    @DeleteMapping
+    public ResponseEntity<GeneralResponse<Boolean>> eliminarProducto(
+            @RequestBody ProductoDTO productoDTO
+    ) {
+        GeneralResponse<Boolean> response = new GeneralResponse<>();
+        Boolean data;
+        HttpStatus status = HttpStatus.OK;
+
+        try {
+            data = productoService.eliminarProducto(productoDTO);
+
+            if (data) {
+                response.setData(true);
+                response.setSuccess(true);
+                response.setMessage("Se ha eliminado el producto con exito");
+            } else {
+                response.setData(false);
+                response.setSuccess(false);
+                response.setMessage("Hubo un error al eliminar el producto");
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setSuccess(false);
+
+            String errorMessage = e.getMessage();
+
+            // Buscar la posición de "Detail:"
+            int detailIndex = errorMessage.indexOf("Detail:");
+            if (detailIndex != -1) {
+                // Obtener el detalle de la excepción
+                String detail = errorMessage.substring(detailIndex + "Detail:".length()).trim();
+                int endDetail = detail.indexOf(".]");
+                if (endDetail != -1) {
+                    // Si se encuentra el final del detalle, extraer el detalle
+                    detail = detail.substring(0, endDetail);
+                }
+                response.setMessage("Detalle de la excepción: " + detail);
+            } else {
+                response.setMessage("No se encontró detalle de la excepción");
+            }
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
 }

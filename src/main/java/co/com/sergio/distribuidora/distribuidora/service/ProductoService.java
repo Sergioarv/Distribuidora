@@ -37,4 +37,20 @@ public interface ProductoService {
      * @return producto almacenado
      */
     ProductoDTO crearProducto(ProductoDTO productoDTO);
+
+    /**
+     * Método encargado de modificar un producto
+     *
+     * @param productoDTO, producto a modificar en la base de datos
+     * @return producto modificado
+     */
+    ProductoDTO modificarProducto(ProductoDTO productoDTO);
+
+    /**
+     * Método encargado de eliminar un producto
+     *
+     * @param productoDTO, producto a eliminar en la base de datos
+     * @return booleano si elimina el producto
+     */
+    Boolean eliminarProducto(ProductoDTO productoDTO);
 }

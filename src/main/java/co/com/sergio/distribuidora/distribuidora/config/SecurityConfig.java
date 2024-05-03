@@ -29,6 +29,9 @@ public class SecurityConfig {
 //                                .requestMatchers("/admin").hasAnyRole("ADMIN")
 //                                .requestMatchers("/producto").permitAll()
                                 .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT, "/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/**").permitAll()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->

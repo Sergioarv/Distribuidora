@@ -103,4 +103,47 @@ public class ProductoServiceImpl implements ProductoService {
         return convertir.ProductoAProductoDTO(productoGuardado);
     }
 
+    /**
+     * Método encargado de modificar un producto
+     *
+     * @param productoDTO, producto a modificar en la base de datos
+     * @return producto modificado
+     */
+    @Override
+    @Transactional
+    public ProductoDTO modificarProducto(ProductoDTO productoDTO) {
+
+        Producto result = productoRepository.findById(productoDTO.getProducto_id()).orElse(null);
+
+        if (result != null) {
+            Producto producto = convertir.ProductoDTOAProducto(productoDTO);
+            Producto productoGuardado = productoRepository.save(producto);
+
+            return convertir.ProductoAProductoDTO(productoGuardado);
+        }
+
+        return null;
+    }
+
+    /**
+     * Método encargado de eliminar un producto
+     *
+     * @param productoDTO, producto a eliminar en la base de datos
+     * @return booleano si elimina el producto
+     */
+    @Override
+    @Transactional
+    public Boolean eliminarProducto(ProductoDTO productoDTO) {
+
+        Producto productoEliminar = convertir.ProductoDTOAProducto(productoDTO);
+
+        Producto result = productoRepository.findById(productoEliminar.getProducto_id()).orElse(null);
+        if (result != null){
+            productoRepository.delete(result);
+            return true;
+        }
+
+        return false;
+    }
+
 }
