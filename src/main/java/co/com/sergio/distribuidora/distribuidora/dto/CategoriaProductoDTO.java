@@ -7,7 +7,7 @@ package co.com.sergio.distribuidora.distribuidora.dto;
  **/
 
 public class CategoriaProductoDTO {
-    private int producto_id;
+    private int categoria_id;
     private String nombre;
     private String descripcion;
 
@@ -15,12 +15,12 @@ public class CategoriaProductoDTO {
     /**  Getter Y Setter **/
     /**********************/
 
-    public int getProducto_id() {
-        return producto_id;
+    public int getCategoria_id() {
+        return categoria_id;
     }
 
-    public void setProducto_id(int producto_id) {
-        this.producto_id = producto_id;
+    public void setCategoria_id(int categoria_id) {
+        this.categoria_id = categoria_id;
     }
 
     public String getNombre() {

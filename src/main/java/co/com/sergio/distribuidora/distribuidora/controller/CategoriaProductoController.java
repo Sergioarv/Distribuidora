@@ -1,7 +1,8 @@
 package co.com.sergio.distribuidora.distribuidora.controller;
 
+import co.com.sergio.distribuidora.distribuidora.dto.CategoriaProductoDTO;
 import co.com.sergio.distribuidora.distribuidora.dto.ProductoDTO;
-import co.com.sergio.distribuidora.distribuidora.service.ProductoService;
+import co.com.sergio.distribuidora.distribuidora.service.CategoriaProductoService;
 import co.com.sergio.distribuidora.distribuidora.utils.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,123 +16,125 @@ import java.util.List;
 
 /**
  * Author: Ing Sergio Abelardo Rodríguez Vásquez
- * Date: 02/05/2024
+ * Date: 03/05/2024
  * Email: ingsergiorodriguezv@gmail.com
  **/
 
 @RestController
-@RequestMapping("/producto")
+@RequestMapping("/categoriaProducto")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-public class ProductoController {
+public class CategoriaProductoController {
 
     @Autowired
-    private ProductoService productoService;
+    CategoriaProductoService categoriaProductoService;
 
     /**
-     * Método encargado de obtener la lista de productos
-     * @return Lista de Productos
+     * Método encargado de obtener la lista de categoriaProducto
+     *
+     * @return Lista de CategoriaProducto
      */
     @GetMapping
-    public ResponseEntity<GeneralResponse<List<ProductoDTO>>> obtenerProductos(){
+    public ResponseEntity<GeneralResponse<List<CategoriaProductoDTO>>> obtenerCategoriaProducto() {
 
-        GeneralResponse<List<ProductoDTO>> response = new GeneralResponse<>();
-        List<ProductoDTO> data;
+        GeneralResponse<List<CategoriaProductoDTO>> response = new GeneralResponse<>();
+        List<CategoriaProductoDTO> data;
         HttpStatus status = HttpStatus.OK;
 
-        data = productoService.obtenerProdutos();
+        data = categoriaProductoService.obtenerCategoria();
 
-        if(data != null) {
-            if(!data.isEmpty()) {
+        if (data != null) {
+            if (!data.isEmpty()) {
                 response.setData(data);
                 response.setSuccess(true);
                 response.setMessage("Completado con exito");
             } else {
                 response.setData(data);
                 response.setSuccess(true);
-                response.setMessage("No hay productos");
+                response.setMessage("No hay categorias");
             }
-        }
-        else{
+        } else {
             response.setData(null);
             response.setSuccess(false);
-            response.setMessage("Error al obtener los productos");
+            response.setMessage("Error al obtener las categorias");
         }
         return new ResponseEntity<>(response, status);
+
     }
 
     /**
-     * método encargado de filtrar los productos por parametros de busqueda
-     * @param prodcuto_id, id del producto a filtrar
-     * @param nombre, Nombre del producto a filtrar
-     * @param clasificacion, clasificacion del producto a filtrar
-     * @param codigo, codigo del producto a filtrar
-     * @param pagina, numero de la pagina filtrada
-     * @param catnPagina, cantidad de productos filtrados por pagina
-     * @return Page de poducto
+     * método encargado de filtrar las categorias por parametros de busqueda
+     *
+     * @param id,          id de la categoria a filtrar
+     * @param nombre,      Nombre de la categoria a filtrar
+     * @param descripcion, descripcion de la categoria a filtrar
+     * @param pagina,      numero de la pagina filtrada
+     * @param catnPagina,  cantidad de categorias filtradas por pagina
+     * @return Page de categoria
      */
     @GetMapping("/filtrar")
-    public ResponseEntity<GeneralResponse<Page<ProductoDTO>>> filtrarProducto(
-            @RequestParam(value = "producto_id", required = false) String prodcuto_id,
+    public ResponseEntity<GeneralResponse<Page<CategoriaProductoDTO>>> filtrarCategoria(
+            @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "nombre", required = false) String nombre,
-            @RequestParam(value = "clasificacion", required = false) String clasificacion,
-            @RequestParam(value = "codigo", required = false) String codigo,
+            @RequestParam(value = "descripcion", required = false) String descripcion,
             @RequestParam(value = "pagina", defaultValue = "0", required = false) int pagina,
             @RequestParam(value = "cantPagina", defaultValue = "10", required = false) int catnPagina
-    ){
-        GeneralResponse<Page<ProductoDTO>> response = new GeneralResponse<>();
-        Page<ProductoDTO> data;
+    ) {
+        GeneralResponse<Page<CategoriaProductoDTO>> response = new GeneralResponse<>();
+        Page<CategoriaProductoDTO> data;
         HttpStatus status = HttpStatus.OK;
 
         Pageable pageable = PageRequest.of(pagina, catnPagina);
 
-        data = productoService.filtrarProducto(prodcuto_id, nombre, clasificacion, codigo, pageable);
+        data = categoriaProductoService.filtrarCategoria(id, nombre, descripcion, pageable);
 
-        if(data != null){
+        if (data != null) {
             response.setData(data);
             response.setSuccess(true);
 
-            if(data.getContent().size() > 1){
-                response.setMessage("Lista de productos obtenida con exito");
-            } else if(data.getContent().size() == 1){
-                response.setMessage("Producto obtenido con exito");
-            } else{
+            if (data.getContent().size() > 1) {
+                response.setMessage("Lista de categorias obtenida con exito");
+            } else if (data.getContent().size() == 1) {
+                response.setMessage("Categoria obtenida con exito");
+            } else {
                 response.setSuccess(false);
-                response.setMessage("No se encontraron productos");
+                response.setMessage("No se encontraron Categorias");
             }
-        }else{
+        } else {
             response.setData(null);
             response.setSuccess(false);
-            response.setMessage("Hubo un error al obtener el producto");
+            response.setMessage("Hubo un error al obtener la categoria");
         }
 
         return new ResponseEntity<>(response, status);
     }
 
     /**
-     * Método encargado de crear un nuevo producto
-     * @param productoDTO, producto a guardar en la base de datos
-     * @return producto almacenado
+     * Método encargado de crear una nueva categoria
+     *
+     * @param categoriaProductoDTO, categoria a guardar en la base de datos
+     * @return categoria almacenada
      */
     @PostMapping
-    public ResponseEntity<GeneralResponse<ProductoDTO>> crearProducto(@RequestBody ProductoDTO productoDTO){
+    public ResponseEntity<GeneralResponse<CategoriaProductoDTO>> crearCategoria(
+            @RequestBody CategoriaProductoDTO categoriaProductoDTO) {
 
-        GeneralResponse<ProductoDTO> response = new GeneralResponse<>();
-        ProductoDTO data;
+        GeneralResponse<CategoriaProductoDTO> response = new GeneralResponse<>();
+        CategoriaProductoDTO data;
         HttpStatus status = HttpStatus.OK;
 
         try {
-            data = productoService.crearProducto(productoDTO);
+            data = categoriaProductoService.crearCategoria(categoriaProductoDTO);
 
             if (data != null) {
                 response.setData(data);
                 response.setSuccess(true);
-                response.setMessage("Se ha creado el producto con exito");
+                response.setMessage("Se ha creado la categoria con exito");
             } else {
                 response.setData(null);
                 response.setSuccess(false);
-                response.setMessage("Hubo un error al crear el producto");
+                response.setMessage("Hubo un error al crear la categoria");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setData(null);
             response.setSuccess(false);
 
@@ -148,7 +151,7 @@ public class ProductoController {
                 }
                 response.setMessage("Detalle de la excepción: " + detail);
             } else {
-               response.setMessage("No se encontró detalle de la excepción");
+                response.setMessage("No se encontró detalle de la excepción");
             }
         }
 

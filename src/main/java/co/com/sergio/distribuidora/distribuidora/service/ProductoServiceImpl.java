@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +28,10 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     ProductoRepository productoRepository;
 
+    @Autowired
     Convertir convertir;
+
+
 
     /**
      * Método encargado de obtener la lista de productos
@@ -95,7 +97,10 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public ProductoDTO crearProducto(ProductoDTO productoDTO) {
 
+        Producto producto = convertir.ProductoDTOAProducto(productoDTO);
+        Producto productoGuardado = productoRepository.save(producto);
 
-        return null;
+        return convertir.ProductoAProductoDTO(productoGuardado);
     }
+
 }
