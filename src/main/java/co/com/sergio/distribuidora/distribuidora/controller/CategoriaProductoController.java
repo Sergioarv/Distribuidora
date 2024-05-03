@@ -1,7 +1,6 @@
 package co.com.sergio.distribuidora.distribuidora.controller;
 
 import co.com.sergio.distribuidora.distribuidora.dto.CategoriaProductoDTO;
-import co.com.sergio.distribuidora.distribuidora.dto.ProductoDTO;
 import co.com.sergio.distribuidora.distribuidora.service.CategoriaProductoService;
 import co.com.sergio.distribuidora.distribuidora.utils.GeneralResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +138,58 @@ public class CategoriaProductoController {
             response.setSuccess(false);
 
             String errorMessage = e.getMessage();
+            // Buscar la posición de "Detail:"
+            int detailIndex = errorMessage.indexOf("Detail:");
+            if (detailIndex != -1) {
+                // Obtener el detalle de la excepción
+                String detail = errorMessage.substring(detailIndex + "Detail:".length()).trim();
+                int endDetail = detail.indexOf(".]");
+                if (endDetail != -1) {
+                    // Si se encuentra el final del detalle, extraer el detalle
+                    detail = detail.substring(0, endDetail);
+                }
+                response.setMessage("Detalle de la excepción: " + detail);
+            } else {
+                response.setMessage("No se encontró detalle de la excepción");
+            }
+        }
+
+        return new ResponseEntity<>(response, status);
+    }
+
+    /**
+     * Método encargado de modificar una categoria
+     *
+     * @param categoriaProductoDTO, categoria a modificar en la base de datos
+     * @return categoria modificada
+     */
+    @PutMapping
+    public ResponseEntity<GeneralResponse<CategoriaProductoDTO>> modificarCategoria(
+            @RequestBody CategoriaProductoDTO categoriaProductoDTO
+    ) {
+
+        GeneralResponse<CategoriaProductoDTO> response = new GeneralResponse<>();
+        CategoriaProductoDTO data;
+        HttpStatus status = HttpStatus.OK;
+
+        try {
+            data = categoriaProductoService.modificarCategoria(categoriaProductoDTO);
+
+            if (data != null) {
+                response.setData(data);
+                response.setSuccess(true);
+                response.setMessage("Se ha modificado la categoria con exito");
+            } else {
+                response.setData(null);
+                response.setSuccess(false);
+                response.setMessage("Hubo un error al modificar la categoria");
+            }
+        } catch (Exception e) {
+            response.setData(null);
+            response.setSuccess(false);
+
+            String errorMessage = e.getMessage();
+
             // Buscar la posición de "Detail:"
             int detailIndex = errorMessage.indexOf("Detail:");
             if (detailIndex != -1) {

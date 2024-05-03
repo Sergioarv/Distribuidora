@@ -3,6 +3,7 @@ package co.com.sergio.distribuidora.distribuidora.controller;
 import co.com.sergio.distribuidora.distribuidora.dto.ProductoDTO;
 import co.com.sergio.distribuidora.distribuidora.service.ProductoService;
 import co.com.sergio.distribuidora.distribuidora.utils.GeneralResponse;
+import jakarta.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,10 +30,11 @@ public class ProductoController {
 
     /**
      * Método encargado de obtener la lista de productos
+     *
      * @return Lista de Productos
      */
     @GetMapping
-    public ResponseEntity<GeneralResponse<List<ProductoDTO>>> obtenerProductos(){
+    public ResponseEntity<GeneralResponse<List<ProductoDTO>>> obtenerProductos() {
 
         GeneralResponse<List<ProductoDTO>> response = new GeneralResponse<>();
         List<ProductoDTO> data;
@@ -40,8 +42,8 @@ public class ProductoController {
 
         data = productoService.obtenerProdutos();
 
-        if(data != null) {
-            if(!data.isEmpty()) {
+        if (data != null) {
+            if (!data.isEmpty()) {
                 response.setData(data);
                 response.setSuccess(true);
                 response.setMessage("Completado con exito");
@@ -50,8 +52,7 @@ public class ProductoController {
                 response.setSuccess(true);
                 response.setMessage("No hay productos");
             }
-        }
-        else{
+        } else {
             response.setData(null);
             response.setSuccess(false);
             response.setMessage("Error al obtener los productos");
@@ -61,12 +62,13 @@ public class ProductoController {
 
     /**
      * método encargado de filtrar los productos por parametros de busqueda
-     * @param prodcuto_id, id del producto a filtrar
-     * @param nombre, Nombre del producto a filtrar
+     *
+     * @param prodcuto_id,   id del producto a filtrar
+     * @param nombre,        Nombre del producto a filtrar
      * @param clasificacion, clasificacion del producto a filtrar
-     * @param codigo, codigo del producto a filtrar
-     * @param pagina, numero de la pagina filtrada
-     * @param catnPagina, cantidad de productos filtrados por pagina
+     * @param codigo,        codigo del producto a filtrar
+     * @param pagina,        numero de la pagina filtrada
+     * @param catnPagina,    cantidad de productos filtrados por pagina
      * @return Page de poducto
      */
     @GetMapping("/filtrar")
@@ -77,7 +79,7 @@ public class ProductoController {
             @RequestParam(value = "codigo", required = false) String codigo,
             @RequestParam(value = "pagina", defaultValue = "0", required = false) int pagina,
             @RequestParam(value = "cantPagina", defaultValue = "10", required = false) int catnPagina
-    ){
+    ) {
         GeneralResponse<Page<ProductoDTO>> response = new GeneralResponse<>();
         Page<ProductoDTO> data;
         HttpStatus status = HttpStatus.OK;
@@ -86,19 +88,19 @@ public class ProductoController {
 
         data = productoService.filtrarProducto(prodcuto_id, nombre, clasificacion, codigo, pageable);
 
-        if(data != null){
+        if (data != null) {
             response.setData(data);
             response.setSuccess(true);
 
-            if(data.getContent().size() > 1){
+            if (data.getContent().size() > 1) {
                 response.setMessage("Lista de productos obtenida con exito");
-            } else if(data.getContent().size() == 1){
+            } else if (data.getContent().size() == 1) {
                 response.setMessage("Producto obtenido con exito");
-            } else{
+            } else {
                 response.setSuccess(false);
                 response.setMessage("No se encontraron productos");
             }
-        }else{
+        } else {
             response.setData(null);
             response.setSuccess(false);
             response.setMessage("Hubo un error al obtener el producto");
@@ -109,11 +111,12 @@ public class ProductoController {
 
     /**
      * Método encargado de crear un nuevo producto
+     *
      * @param productoDTO, producto a guardar en la base de datos
      * @return producto almacenado
      */
     @PostMapping
-    public ResponseEntity<GeneralResponse<ProductoDTO>> crearProducto(@RequestBody ProductoDTO productoDTO){
+    public ResponseEntity<GeneralResponse<ProductoDTO>> crearProducto(@RequestBody ProductoDTO productoDTO) {
 
         GeneralResponse<ProductoDTO> response = new GeneralResponse<>();
         ProductoDTO data;
@@ -131,24 +134,28 @@ public class ProductoController {
                 response.setSuccess(false);
                 response.setMessage("Hubo un error al crear el producto");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             response.setData(null);
             response.setSuccess(false);
 
-            String errorMessage = e.getMessage();
-            // Buscar la posición de "Detail:"
-            int detailIndex = errorMessage.indexOf("Detail:");
-            if (detailIndex != -1) {
-                // Obtener el detalle de la excepción
-                String detail = errorMessage.substring(detailIndex + "Detail:".length()).trim();
-                int endDetail = detail.indexOf(".]");
-                if (endDetail != -1) {
-                    // Si se encuentra el final del detalle, extraer el detalle
-                    detail = detail.substring(0, endDetail);
-                }
-                response.setMessage("Detalle de la excepción: " + detail);
+            if (e instanceof org.hibernate.PropertyValueException) {
+                response.setMessage("Falta un valor para una propiedad requerida.");
             } else {
-               response.setMessage("No se encontró detalle de la excepción");
+                String errorMessage = e.getMessage();
+                // Buscar la posición de "Detail:"
+                int detailIndex = errorMessage.indexOf("Detail:");
+                if (detailIndex != -1) {
+                    // Obtener el detalle de la excepción
+                    String detail = errorMessage.substring(detailIndex + "Detail:".length()).trim();
+                    int endDetail = detail.indexOf(".]");
+                    if (endDetail != -1) {
+                        // Si se encuentra el final del detalle, extraer el detalle
+                        detail = detail.substring(0, endDetail);
+                    }
+                    response.setMessage("Detalle de la excepción: " + detail  + e.getMessage());
+                } else {
+                    response.setMessage("No se encontró detalle de la excepción");
+                }
             }
         }
 

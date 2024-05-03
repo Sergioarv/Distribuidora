@@ -39,4 +39,13 @@ public interface CategoriaProductoService {
      * @return categoria almacenada
      */
     CategoriaProductoDTO crearCategoria(CategoriaProductoDTO categoriaProductoDTO);
+
+
+    /**
+     * Método encargado de modificar una categoria
+     *
+     * @param categoriaProductoDTO, categoria a modificar en la base de datos
+     * @return categoria modificada
+     */
+    CategoriaProductoDTO modificarCategoria(CategoriaProductoDTO categoriaProductoDTO);
 }

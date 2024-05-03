@@ -1,6 +1,7 @@
 package co.com.sergio.distribuidora.distribuidora.entity;
 
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,6 +42,7 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
+    @NonNull
     private CategoriaProducto categoria;
 
     /**********************/

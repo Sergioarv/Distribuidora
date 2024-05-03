@@ -97,4 +97,21 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
 
         return convertir.CategoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
     }
+
+    /**
+     * Método encargado de modificar una categoria
+     *
+     * @param categoriaProductoDTO, categoria a modificar en la base de datos
+     * @return categoria modificada
+     */
+    @Override
+    @Transactional
+    public CategoriaProductoDTO modificarCategoria(CategoriaProductoDTO categoriaProductoDTO) {
+
+        CategoriaProducto categoriaProducto = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
+        CategoriaProducto categoriaProductoGuardado = categoriaProductoRepository.save(categoriaProducto);
+
+        return convertir.CategoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
+
+    }
 }
