@@ -47,7 +47,7 @@ public class ProductoServiceImpl implements ProductoService {
         if (!result.isEmpty()) {
 
             return result.stream()
-                    .map(convertir::ProductoAProductoDTO)
+                    .map(convertir::productoAProductoDTO)
                     .collect(Collectors.toList());
         } else {
             return new ArrayList<>();
@@ -80,7 +80,7 @@ public class ProductoServiceImpl implements ProductoService {
         } else {
             Page<Producto> result = productoRepository.findAll(pageable);
             if (!result.isEmpty()) {
-                return result.map(convertir::ProductoAProductoDTO);
+                return result.map(convertir::productoAProductoDTO);
             } else {
                 return new PageImpl<>(Collections.emptyList(), pageable, 0);
             }
@@ -97,10 +97,10 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public ProductoDTO crearProducto(ProductoDTO productoDTO) {
 
-        Producto producto = convertir.ProductoDTOAProducto(productoDTO);
+        Producto producto = convertir.productoDTOAProducto(productoDTO);
         Producto productoGuardado = productoRepository.save(producto);
 
-        return convertir.ProductoAProductoDTO(productoGuardado);
+        return convertir.productoAProductoDTO(productoGuardado);
     }
 
     /**
@@ -116,10 +116,10 @@ public class ProductoServiceImpl implements ProductoService {
         Producto result = productoRepository.findById(productoDTO.getProducto_id()).orElse(null);
 
         if (result != null) {
-            Producto producto = convertir.ProductoDTOAProducto(productoDTO);
+            Producto producto = convertir.productoDTOAProducto(productoDTO);
             Producto productoGuardado = productoRepository.save(producto);
 
-            return convertir.ProductoAProductoDTO(productoGuardado);
+            return convertir.productoAProductoDTO(productoGuardado);
         }
 
         return null;
@@ -135,7 +135,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional
     public Boolean eliminarProducto(ProductoDTO productoDTO) {
 
-        Producto productoEliminar = convertir.ProductoDTOAProducto(productoDTO);
+        Producto productoEliminar = convertir.productoDTOAProducto(productoDTO);
 
         Producto result = productoRepository.findById(productoEliminar.getProducto_id()).orElse(null);
         if (result != null){

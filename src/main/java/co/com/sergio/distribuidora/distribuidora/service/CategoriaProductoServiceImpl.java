@@ -50,7 +50,7 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
         if (!result.isEmpty()) {
 
             return result.stream()
-                    .map(convertir::CategoriaProductoACategoriaProductoDTO)
+                    .map(convertir::categoriaProductoACategoriaProductoDTO)
                     .collect(Collectors.toList());
         } else {
             return new ArrayList<>();
@@ -79,7 +79,7 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
         } else {
             Page<CategoriaProducto> result = categoriaProductoRepository.findAll(pageable);
             if (!result.isEmpty()) {
-                return result.map(convertir::CategoriaProductoACategoriaProductoDTO);
+                return result.map(convertir::categoriaProductoACategoriaProductoDTO);
             } else {
                 return new PageImpl<>(Collections.emptyList(), pageable, 0);
             }
@@ -96,10 +96,10 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
     @Transactional
     public CategoriaProductoDTO crearCategoria(CategoriaProductoDTO categoriaProductoDTO) {
 
-        CategoriaProducto categoriaProducto = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
+        CategoriaProducto categoriaProducto = convertir.categoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
         CategoriaProducto categoriaProductoGuardado = categoriaProductoRepository.save(categoriaProducto);
 
-        return convertir.CategoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
+        return convertir.categoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
     }
 
     /**
@@ -115,10 +115,10 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
         CategoriaProducto result = categoriaProductoRepository.findById(categoriaProductoDTO.getCategoria_id()).orElse(null);
 
         if (result != null) {
-            CategoriaProducto categoriaProducto = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
+            CategoriaProducto categoriaProducto = convertir.categoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
             CategoriaProducto categoriaProductoGuardado = categoriaProductoRepository.save(categoriaProducto);
 
-            return convertir.CategoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
+            return convertir.categoriaProductoACategoriaProductoDTO(categoriaProductoGuardado);
         }
 
         return null;
@@ -134,7 +134,7 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
     @Transactional
     public Boolean eliminarCategoria(CategoriaProductoDTO categoriaProductoDTO) {
 
-        CategoriaProducto categoriaEliminar = convertir.CategoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
+        CategoriaProducto categoriaEliminar = convertir.categoriaProductoDTOACategoriaProducto(categoriaProductoDTO);
 
         List<Producto> productos = productoRepository.findByCategoria(categoriaEliminar);
 

@@ -22,9 +22,9 @@ public interface CategoriaProductoRepository extends JpaRepository<CategoriaProd
      *
      * @param id,       id de la categoria
      * @param pageable, información para crear la paginación
-     * @return page de vategoria por id
+     * @return page de categoria por id
      */
-    @Query(value = "select * from categoriaproducto as cp where cp.id = :id", nativeQuery = true)
+    @Query(value = "select * from categoriaproducto as cp where cp.categoria_id = :id", nativeQuery = true)
     Page<CategoriaProductoDTO> categoriaPorId(int id, Pageable pageable);
 
 
