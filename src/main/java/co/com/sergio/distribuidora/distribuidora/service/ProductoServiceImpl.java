@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,10 +31,16 @@ public class ProductoServiceImpl implements ProductoService {
     @Transactional(readOnly = true)
     public List<ProductoDTO> obtenerProdutos() {
 
-        List<Producto> result = productoRepository.findAll(Sort.by("producto_id").ascending());
+        List<Producto> result = productoRepository.findAll();
 
-        return result.stream()
-                .map(convertir::ProductoAProductoDTO)
-                .collect(Collectors.toList());
+        if (result != null && result.size() > 0) {
+
+            return result.stream()
+                    .map(convertir::ProductoAProductoDTO)
+                    .collect(Collectors.toList());
+        } else if (result.size() == 0) {
+            return new ArrayList<ProductoDTO>();
+        }
+        return null;
     }
 }

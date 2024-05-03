@@ -33,10 +33,22 @@ public class ProductoController {
 
         data = productoService.obtenerProdutos();
 
-        response.setData(data);
-        response.setSuccess(true);
-        response.setMessage("completado con exito");
-
+        if(data != null) {
+            if(data.size() > 0) {
+                response.setData(data);
+                response.setSuccess(true);
+                response.setMessage("completado con exito");
+            } else {
+                response.setData(data);
+                response.setSuccess(true);
+                response.setMessage("No hay productos");
+            }
+        }
+        else{
+            response.setData(null);
+            response.setSuccess(false);
+            response.setMessage("Error");
+        }
         return new ResponseEntity<>(response, status);
     }
 }
